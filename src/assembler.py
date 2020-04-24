@@ -1,6 +1,7 @@
 import os
 import sys
 
+
 def read_data():
     """
     コマンドライン引数の一番目で指定されたファイルから読み取り、一行ずつリストにして返す。
@@ -152,21 +153,26 @@ def write_result(result):
       DATA_RADIXは二進数、ADDRESS_RADIXはDECとしているが
       HEXのほうがよいか？
     """
-    path_out = ""
     if len(sys.argv) >= 3:
-        path_out = sys.argv[2]
+        fout = open(sys.argv[2], mode="w")
+        fout.write("WIDTH=16;\n")
+        fout.write("DEPTH=256;\n")
+        fout.write("ADDRESS_RADIX=DEC;\n")
+        fout.write("DATA_RADIX=BIN;\n")
+        fout.write("CONTENT BEGIN\n")
+        for i in range(len(result)):
+            fout.write("\t" + str(i) + " : " + result[i] + ";\n")
+        fout.write("END;\n")
+        fout.close()
     else:
-        path_out = "out.mif"
-    fout = open(path_out, mode="w")
-    fout.write("WIDTH=16;\n")
-    fout.write("DEPTH=256;\n")
-    fout.write("ADDRESS_RADIX=DEC;\n")
-    fout.write("DATA_RADIX=BIN;\n")
-    fout.write("CONTENT BEGIN\n")
-    for i in range(len(result)):
-        fout.write("\t" + str(i) + " : " + result[i] + ";\n")
-    fout.write("END;\n")
-    fout.close()
+        print("WIDTH=16;")
+        print("DEPTH=256;")
+        print("ADDRESS_RADIX=DEC;")
+        print("DATA_RADIX=BIN;")
+        print("CONTENT BEGIN")
+        for i in range(len(result)):
+            print("\t" + str(i) + " : " + result[i] + ";")
+        print("END;")
 
 
 data = read_data()
