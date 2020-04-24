@@ -1,36 +1,6 @@
 import os
 import sys
 
-"""
-各コマンドに特有のopcodeなど
-"""
-opcode = dict(
-    [
-        ("ADD", "0000"),
-        ("SUB", "0001"),
-        ("AND", "0010"),
-        ("OR", "0011"),
-        ("XOR", "0100"),
-        ("CMP", "0101"),
-        ("MOV", "0110"),
-        ("SLL", "1000"),
-        ("SLR", "1001"),
-        ("SRL", "1010"),
-        ("SRA", "1011"),
-        ("IN", "1100"),
-        ("OUT", "1101"),
-        ("HLT", "1111"),
-        ("LD", "00"),
-        ("ST", "01"),
-        ("LI", "000"),
-        ("B", "100"),
-        ("BE", "000"),
-        ("BLT", "001"),
-        ("BLE", "010"),
-        ("BNE", "011"),
-    ]
-)
-
 
 def read_data():
     """
@@ -38,8 +8,8 @@ def read_data():
     コマンドライン引数が指定されなかった場合は、usageを表示してプログラムを終了する。
     """
     if len(sys.argv) < 2:
-        print("usage: python3 assembler.py input-file [output-file]")
-        exit(0)
+        print("usage: python3 assembler.py input-file [output-file]", file=sys.stderr)
+        exit(1)
     path_in = sys.argv[1]
     fin = open(path_in)
     s = [tmp.strip() for tmp in fin.readlines()]
@@ -48,6 +18,11 @@ def read_data():
 
 
 def preproc(line):
+    """
+      一行の命令を命令名と引数の列に分解する。
+      引数はカンマ区切りで分割され、前から順番にargsに入る。
+      d(Rb)の形式のものは、d,Rbの順でargsに入る。
+    """
     head, tail = "", ""
     for i in range(len(line)):
         if line[i] == " ":
@@ -55,69 +30,128 @@ def preproc(line):
             break
         head += line[i]
     cmd = head.upper()
-    tmp = [s.strip() for s in tail.split(",")]
+    tmp = [s.strip() for s in tail.split(",") if not s == ""]
     args = []
     for i in range(len(tmp)):
         if "(" in tmp[i] and ")" in tmp[i]:
             a = tmp[i][: tmp[i].find("(")].strip()
             b = tmp[i][tmp[i].find("(") + 1 : tmp[i].find(")")].strip()
-            args.append(a)
-            args.append(b)
+            try:
+                args.append(int(a))
+                args.append(int(b))
+            except Exception:
+                raise ValueError
         else:
-            args.append(tmp[i])
-    return cmd, list(map(int, args))
+            try:
+                args.append(int(tmp[i]))
+            except Exception:
+                raise ValueError
+    return cmd, args
+
+
+def to_binary(integer, digit, signed=False):
+    """
+      integerを指定された桁数(digit)の二進数に変換する。
+      signed=Falseの場合は0埋めされ、signed=Trueの場合は二の補数表示になる。
+    """
+    if signed:
+        return format(integer & (2 ** digit - 1), "0" + str(digit) + "b")
+    else:
+        return format(integer, "0" + str(digit) + "b")
 
 
 def assemble(data):
     result = []
     for i in range(len(data)):
-        cmd, args = preproc(data[i])
-        if cmd in ["ADD", "SUB", "AND", "OR", "XOR", "CMP", "MOV"]:
+        cmd, args = "", []
+        try:
+            cmd, args = preproc(data[i])
+        except ValueError:
+            print(str(i + 1) + "行目: 命令の引数が不正です", file=sys.stderr)
+            exit(1)
+        if cmd == "ADD":
             result.append(
-                "11"
-                + format(args[1], "03b")
-                + format(args[0], "03b")
-                + opcode[cmd]
-                + "0000"
+                "11" + to_binary(args[1], 3) + to_binary(args[0], 3) + "0000" + "0000"
             )
-        elif cmd in ["SLL", "SLR", "SRL", "SRA"]:
+        elif cmd == "SUB":
             result.append(
-                "11"
-                + "000"
-                + format(args[0], "03b")
-                + opcode[cmd]
-                + format(args[1], "04b")
+                "11" + to_binary(args[1], 3) + to_binary(args[0], 3) + "0001" + "0000"
             )
-        elif cmd in ["IN"]:
-            result.append("11" + "000" + format(args[0], "03b") + opcode[cmd] + "0000")
-        elif cmd in ["OUT"]:
-            result.append("11" + format(args[0], "03b") + "000" + opcode[cmd] + "0000")
-        elif cmd in ["HLT"]:
+        elif cmd == "AND":
+            result.append(
+                "11" + to_binary(args[1], 3) + to_binary(args[0], 3) + "0010" + "0000"
+            )
+        elif cmd == "OR":
+            result.append(
+                "11" + to_binary(args[1], 3) + to_binary(args[0], 3) + "0011" + "0000"
+            )
+        elif cmd == "XOR":
+            result.append(
+                "11" + to_binary(args[1], 3) + to_binary(args[0], 3) + "0100" + "0000"
+            )
+        elif cmd == "CMP":
+            result.append(
+                "11" + to_binary(args[1], 3) + to_binary(args[0], 3) + "0101" + "0000"
+            )
+        elif cmd == "MOV":
+            result.append(
+                "11" + to_binary(args[1], 3) + to_binary(args[0], 3) + "0110" + "0000"
+            )
+        elif cmd == "SLL":
+            result.append(
+                "11" + "000" + to_binary(args[0], 3) + "1000" + to_binary(args[1], 4)
+            )
+        elif cmd == "SLR":
+            result.append(
+                "11" + "000" + to_binary(args[0], 3) + "1001" + to_binary(args[1], 4)
+            )
+        elif cmd == "SRL":
+            result.append(
+                "11" + "000" + to_binary(args[0], 3) + "1010" + to_binary(args[1], 4)
+            )
+        elif cmd == "SRA":
+            result.append(
+                "11" + "000" + to_binary(args[0], 3) + "1011" + to_binary(args[1], 4)
+            )
+        elif cmd == "IN":
+            result.append("11" + "000" + to_binary(args[0], 3) + "1100" + "0000")
+        elif cmd == "OUT":
+            result.append("11" + to_binary(args[0], 3) + "1101" + "0000")
+        elif cmd == "HLT":
             result.append("11" + "000" + "000" + "1111" + "0000")
-        elif cmd in ["LD", "ST"]:
+        elif cmd == "LD":
             result.append(
-                opcode[cmd]
-                + format(args[0], "03b")
-                + format(args[2], "03b")
-                + format(args[1] & (2 ** 8 - 1), "08b")
+                "00"
+                + to_binary(args[0], 3)
+                + to_binary(args[2], 3)
+                + to_binary(args[1], 8, signed=True)
             )
-        elif cmd in ["LI"]:
+        elif cmd == "ST":
+            result.append(
+                "01"
+                + to_binary(args[0], 3)
+                + to_binary(args[2], 3)
+                + to_binary(args[1], 8, signed=True)
+            )
+        elif cmd == "LI":
             result.append(
                 "10"
-                + opcode[cmd]
-                + format(args[0], "03b")
-                + format(args[1] & (2 ** 8 - 1), "08b")
+                + "000"
+                + to_binary(args[0], 3)
+                + to_binary(args[1], 8, signed=True)
             )
-        elif cmd in ["B"]:
-            result.append(
-                "10" + opcode[cmd] + "000" + format(args[0] & (2 ** 8 - 1), "08b")
-            )
-        elif cmd in ["BE", "BLT", "BLE", "BNE"]:
-            result.append(
-                "10" + "111" + opcode[cmd] + format(args[0] & (2 ** 8 - 1), "08b")
-            )
+        elif cmd == "B":
+            result.append("10" + "100" + "000" + to_binary(args[0], 8, signed=True))
+        elif cmd == "BE":
+            result.append("10" + "111" + "000" + to_binary(args[0], 8, signed=True))
+        elif cmd == "BLT":
+            result.append("10" + "111" + "001" + to_binary(args[0], 8, signed=True))
+        elif cmd == "BLE":
+            result.append("10" + "111" + "010" + to_binary(args[0], 8, signed=True))
+        elif cmd == "BNE":
+            result.append("10" + "111" + "011" + to_binary(args[0], 8, signed=True))
         else:
-            print(str(i + 1) + "行目:コマンド名が正しくありません")
+            print(str(i + 1) + "行目:コマンド名が正しくありません", file=sys.stderr)
             exit(1)
     return result
 
@@ -131,21 +165,26 @@ def write_result(result):
       DATA_RADIXは二進数、ADDRESS_RADIXはDECとしているが
       HEXのほうがよいか？
     """
-    path_out = ""
     if len(sys.argv) >= 3:
-        path_out = sys.argv[2]
+        fout = open(sys.argv[2], mode="w")
+        fout.write("WIDTH=16;\n")
+        fout.write("DEPTH=256;\n")
+        fout.write("ADDRESS_RADIX=DEC;\n")
+        fout.write("DATA_RADIX=BIN;\n")
+        fout.write("CONTENT BEGIN\n")
+        for i in range(len(result)):
+            fout.write("\t" + str(i) + " : " + result[i] + ";\n")
+        fout.write("END;\n")
+        fout.close()
     else:
-        path_out = "out.mif"
-    fout = open(path_out, mode="w")
-    fout.write("WIDTH=16;\n")
-    fout.write("DEPTH=256;\n")
-    fout.write("ADDRESS_RADIX=DEC;\n")
-    fout.write("DATA_RADIX=BIN;\n")
-    fout.write("CONTENT BEGIN\n")
-    for i in range(len(result)):
-        fout.write("\t" + str(i) + " : " + result[i] + ";\n")
-    fout.write("END;\n")
-    fout.close()
+        print("WIDTH=16;")
+        print("DEPTH=256;")
+        print("ADDRESS_RADIX=DEC;")
+        print("DATA_RADIX=BIN;")
+        print("CONTENT BEGIN")
+        for i in range(len(result)):
+            print("\t" + str(i) + " : " + result[i] + ";")
+        print("END;")
 
 
 data = read_data()
