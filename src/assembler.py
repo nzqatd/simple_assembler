@@ -8,7 +8,7 @@ def read_data():
     コマンドライン引数が指定されなかった場合は、usageを表示してプログラムを終了する。
     """
     if len(sys.argv) < 2:
-        print("usage: python3 assembler.py input-file [output-file]")
+        print("usage: python3 assembler.py input-file [output-file]", file=sys.stderr)
         exit(1)
     path_in = sys.argv[1]
     fin = open(path_in)
@@ -18,6 +18,11 @@ def read_data():
 
 
 def preproc(line):
+    """
+      一行の命令を命令名と引数の列に分解する。
+      引数はカンマ区切りで分割され、前から順番にargsに入る。
+      d(Rb)の形式のものは、d,Rbの順でargsに入る。
+    """
     head, tail = "", ""
     for i in range(len(line)):
         if line[i] == " ":
@@ -25,7 +30,7 @@ def preproc(line):
             break
         head += line[i]
     cmd = head.upper()
-    tmp = [s.strip() for s in tail.split(",")]
+    tmp = [s.strip() for s in tail.split(",") if not s == ""]
     args = []
     for i in range(len(tmp)):
         if "(" in tmp[i] and ")" in tmp[i]:
@@ -35,18 +40,20 @@ def preproc(line):
                 args.append(int(a))
                 args.append(int(b))
             except Exception:
-                print(str(i + 1) + "行目: 命令の引数に整数でないものが含まれています")
-                exit(1)
+                raise ValueError
         else:
             try:
                 args.append(int(tmp[i]))
             except Exception:
-                print(str(i + 1) + "行目: 命令の引数に整数でないものが含まれています")
-                exit(1)
+                raise ValueError
     return cmd, args
 
 
 def to_binary(integer, digit, signed=False):
+    """
+      integerを指定された桁数(digit)の二進数に変換する。
+      signed=Falseの場合は0埋めされ、signed=Trueの場合は二の補数表示になる。
+    """
     if signed:
         return format(integer & (2 ** digit - 1), "0" + str(digit) + "b")
     else:
@@ -56,7 +63,12 @@ def to_binary(integer, digit, signed=False):
 def assemble(data):
     result = []
     for i in range(len(data)):
-        cmd, args = preproc(data[i])
+        cmd, args = "", []
+        try:
+            cmd, args = preproc(data[i])
+        except ValueError:
+            print(str(i + 1) + "行目: 命令の引数が不正です", file=sys.stderr)
+            exit(1)
         if cmd == "ADD":
             result.append(
                 "11" + to_binary(args[1], 3) + to_binary(args[0], 3) + "0000" + "0000"
@@ -139,7 +151,7 @@ def assemble(data):
         elif cmd == "BNE":
             result.append("10" + "111" + "011" + to_binary(args[0], 8, signed=True))
         else:
-            print(str(i + 1) + "行目:コマンド名が正しくありません")
+            print(str(i + 1) + "行目:コマンド名が正しくありません", file=sys.stderr)
             exit(1)
     return result
 
