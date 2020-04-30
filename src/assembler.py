@@ -203,7 +203,7 @@ def assemble(data):
                 print(str(i + 1) + "行目:コマンド名が正しくありません", file=sys.stderr)
                 exit(1)
         except ValueError as e:
-            print(str(i + 1) + "行目 " + str(e) + ": 値が大きすぎます", file=sys.stderr)
+            print(str(i + 1) + "行目 " + str(e) + ": 値の大きさが不正です", file=sys.stderr)
             exit(1)
     return result
 
