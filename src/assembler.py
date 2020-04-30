@@ -165,7 +165,7 @@ def assemble(data):
             elif cmd == "IN":
                 result.append("11" + "000" + to_binary(args[0], 3) + "1100" + "0000")
             elif cmd == "OUT":
-                result.append("11" + to_binary(args[0], 3) + "1101" + "0000")
+                result.append("11" + to_binary(args[0], 3) + "000" + "1101" + "0000")
             elif cmd == "HLT":
                 result.append("11" + "000" + "000" + "1111" + "0000")
             elif cmd == "LD":
