@@ -1,7 +1,10 @@
 # simple_assembler
 
-SIMPLE向けアセンブラのPython版  
-(Java版は[simple_simulator](https://github.com/kuis-isle3hw/simple_simulator)にオプション機能として同梱)
+[計算機科学実験及演習3(HW)](http://www.lab3.kuis.kyoto-u.ac.jp/~takase/le3a/)の仕様に準拠するアセンブラです．  
+Pythonで記述されています．(Java版は[simple_simulator](https://github.com/kuis-isle3hw/simple_simulator)にオプション機能として同梱)  
+
+アセンブリ命令のテキストファイルを入力として読み込み，QuartusのRAMに対応する.mif形式の情報を出力します．
+
 
 ## ツール・バージョン
 - Python 3.7.6
