@@ -82,6 +82,11 @@ def assemble(data):
                     + "0000"
                     + "0000"
                 )
+            elif cmd == "IADD":
+                "11000"
+                + to_binary(args[1], 3)
+                + "00001"
+                + to_binary(args[0], 3)
             elif cmd == "SUB":
                 result.append(
                     "11"
@@ -90,6 +95,11 @@ def assemble(data):
                     + "0001"
                     + "0000"
                 )
+            elif cmd == "ISUB":
+                "11000"
+                + to_binary(args[1], 3)
+                + "00011"
+                + to_binary(args[0], 3)
             elif cmd == "AND":
                 result.append(
                     "11"
@@ -98,6 +108,11 @@ def assemble(data):
                     + "0010"
                     + "0000"
                 )
+            elif cmd == "IAND":
+                "11000"
+                + to_binary(args[1], 3)
+                + "00101"
+                + to_binary(args[0], 3)
             elif cmd == "OR":
                 result.append(
                     "11"
@@ -106,6 +121,11 @@ def assemble(data):
                     + "0011"
                     + "0000"
                 )
+            elif cmd == "IOR":
+                "11000"
+                + to_binary(args[1], 3)
+                + "00111"
+                + to_binary(args[0], 3)
             elif cmd == "XOR":
                 result.append(
                     "11"
@@ -114,6 +134,11 @@ def assemble(data):
                     + "0100"
                     + "0000"
                 )
+            elif cmd == "IXOR":
+                "11000"
+                + to_binary(args[1], 3)
+                + "01001"
+                + to_binary(args[0], 3)
             elif cmd == "CMP":
                 result.append(
                     "11"
