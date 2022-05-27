@@ -32,15 +32,15 @@ $python3 assembler.py input-file [output-file]
 \hline
 \textbf{命令}  & \textbf{第一引数} & \textbf{第二引数} & \textbf{第三引数} \\ \hline
 \textbf{ADD}  & R{[}Rd{]}     & R{[}Rs{]}     &               \\ \hline
-\textbf{IADD} & R{[}Rd{]}     & R{[}Rs{]}     & d             \\ \hline
+\textbf{IADD} & R{[}Rd{]}     & d             &               \\ \hline
 \textbf{SUB}  & R{[}Rd{]}     & R{[}Rs{]}     &               \\ \hline
-\textbf{ISUB} & R{[}Rd{]}     & R{[}Rs{]}     & d             \\ \hline
+\textbf{ISUB} & R{[}Rd{]}     & d             &               \\ \hline
 \textbf{AND}  & R{[}Rd{]}     & R{[}Rs{]}     &               \\ \hline
-\textbf{IAND} & R{[}Rd{]}     & R{[}Rs{]}     & d             \\ \hline
+\textbf{IAND} & R{[}Rd{]}     & d             &               \\ \hline
 \textbf{OR}   & R{[}Rd{]}     & R{[}Rs{]}     &               \\ \hline
-\textbf{IOR}  & R{[}Rd{]}     & R{[}Rs{]}     & d             \\ \hline
+\textbf{IOR}  & R{[}Rd{]}     & d             &               \\ \hline
 \textbf{XOR}  & R{[}Rd{]}     & R{[}Rs{]}     &               \\ \hline
-\textbf{IXOR} & R{[}Rd{]}     & R{[}Rs{]}     & d             \\ \hline
+\textbf{IXOR} & R{[}Rd{]}     & d             &               \\ \hline
 \textbf{CMP}  & R{[}Rd{]}     & R{[}Rs{]}     &               \\ \hline
 \textbf{MOV}  & R{[}Rd{]}     & R{[}Rs{]}     &               \\ \hline
 \textbf{SLL}  & R{[}Rd{]}     & d             &               \\ \hline
@@ -58,9 +58,11 @@ $python3 assembler.py input-file [output-file]
 \textbf{BLT}  & d             &               &               \\ \hline
 \textbf{BLE}  & d             &               &               \\ \hline
 \textbf{BNE}  & d             &               &               \\ \hline
+\textbf{BMT}  & d             &               &               \\ \hline
 \textbf{IBE}  & R{[}Rd{]}     & R{[}Rs{]}     & d             \\ \hline
 \textbf{IBLT} & R{[}Rd{]}     & R{[}Rs{]}     & d             \\ \hline
 \textbf{IBLE} & R{[}Rd{]}     & R{[}Rs{]}     & d             \\ \hline
+\textbf{IBNE} & R{[}Rd{]}     & R{[}Rs{]}     & d             \\ \hline
 \textbf{IBMT} & R{[}Rd{]}     & R{[}Rs{]}     & d             \\ \hline
 
 \end{tabular}

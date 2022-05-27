@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.15.0 (TeX Live 2022)  (format=lualatex 2022.4.7)  13 MAY 2022 16:04
+This is LuaHBTeX, Version 1.15.0 (TeX Live 2022)  (format=lualatex 2022.4.7)  26 MAY 2022 14:52
  restricted system commands enabled.
  file:line:error style messages enabled.
 **c:/Users/CuSO4/Documents/GitHub/simple_assembler/assembler_user_manual
@@ -615,15 +615,15 @@ LaTeX Font Info:    Font shape `JY3/gt/m/n' will be
 
 Here is how much of LuaTeX's memory you used:
  6968 strings out of 477785
- 195698,460012 words of node,token memory allocated
- 20236 words of node memory still in use:
-   10 hlist, 2 vlist, 5 rule, 2 glue, 375 kern, 1 glyph, 8325 attribute, 104 glue_spec, 428 attribute_list, 1 write, 23 user_defined nodes
-   avail lists: 1:44,2:66130,3:101,4:471,5:81,6:14,7:3066,8:1,9:1193,10:10,11:9
+ 195704,460012 words of node,token memory allocated
+ 20330 words of node memory still in use:
+   10 hlist, 2 vlist, 5 rule, 2 glue, 377 kern, 1 glyph, 8365 attribute, 104 glue_spec, 430 attribute_list, 1 write, 23 user_defined nodes
+   avail lists: 1:46,2:67912,3:101,4:479,5:81,6:14,7:3194,8:1,9:1217,10:10,11:9
  27284 multiletter control sequences out of 65536+600000
  65 fonts using 37031519 bytes
  114i,9n,112p,1804b,475s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2022/texmf-dist/fonts/opentype/public/lm/lmroman10-bold.otf><c:/texlive/2022/texmf-dist/fonts/opentype/public/lm/lmroman9-regular.otf><c:/texlive/2022/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf><c:/texlive/2022/texmf-dist/fonts/opentype/public/haranoaji/HaranoAjiMincho-Regular.otf><c:/texlive/2022/texmf-dist/fonts/opentype/public/haranoaji/HaranoAjiGothic-Medium.otf><c:/texlive/2022/texmf-dist/fonts/opentype/public/lm/lmsans12-regular.otf>
-Output written on assembler_user_manual.pdf (2 pages, 48068 bytes).
+Output written on assembler_user_manual.pdf (2 pages, 48142 bytes).
 
 PDF statistics: 53 PDF objects out of 1000 (max. 8388607)
  30 compressed objects within 1 object stream

@@ -232,15 +232,15 @@ def assemble(data):
                     + "001"
                     + to_binary(args[0], 3)
                     + to_binary(args[1], 3)
-                    + to_binary(args[2], 5)
+                    + to_binary(args[2], 5, signed = True)
                 )
             elif cmd == "IBLT":
                 result.append(
                     "10" 
-                    + "100"
+                    + "010"
                     + to_binary(args[0], 3)
                     + to_binary(args[1], 3)
-                    + to_binary(args[2], 5)
+                    + to_binary(args[2], 5, signed = True)
                 )
             elif cmd == "IBLE":
                 result.append(
@@ -248,7 +248,7 @@ def assemble(data):
                     + "011"
                     + to_binary(args[0], 3)
                     + to_binary(args[1], 3)
-                    + to_binary(args[2], 5)
+                    + to_binary(args[2], 5, signed = True)
                 )
             elif cmd == "IBNE":
                 result.append(
@@ -256,7 +256,7 @@ def assemble(data):
                     + "101"
                     + to_binary(args[0], 3)
                     + to_binary(args[1], 3)
-                    + to_binary(args[2], 5)
+                    + to_binary(args[2], 5, signed = True)
                 )
             elif cmd == "IBMT":
                 result.append(
@@ -264,7 +264,7 @@ def assemble(data):
                     + "110"
                     + to_binary(args[0], 3)
                     + to_binary(args[1], 3)
-                    + to_binary(args[2], 5)
+                    + to_binary(args[2], 5, signed = True)
                 )
             elif cmd == "BE":
                 result.append("10" + "111" + "000" + to_binary(args[0], 8, signed=True))
@@ -274,6 +274,8 @@ def assemble(data):
                 result.append("10" + "111" + "010" + to_binary(args[0], 8, signed=True))
             elif cmd == "BNE":
                 result.append("10" + "111" + "011" + to_binary(args[0], 8, signed=True))
+            elif cmd == "BMT":
+                result.append("10" + "111" + "100" + to_binary(args[0], 8, signed=True))
             else:
                 print(str(i + 1) + "行目:コマンド名が正しくありません", file=sys.stderr)
                 exit(1)
